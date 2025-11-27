@@ -1,7 +1,12 @@
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+'use client';
+
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useAuth } from '@/components/auth/auth-provider';
 
 export default function Home() {
+  const { user, loading, signOut } = useAuth();
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -13,12 +18,25 @@ export default function Home() {
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="flex items-center space-x-2">
-              <Link href="/login">
-                <Button variant="outline">Login</Button>
-              </Link>
-              <Link href="/register">
-                <Button>Sign Up</Button>
-              </Link>
+              {loading ? (
+                <div>Loading...</div>
+              ) : user ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm">Welcome, {user.email}</span>
+                  <Button variant="outline" onClick={signOut}>
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="outline">Login</Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button>Sign Up</Button>
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         </div>
@@ -32,18 +50,27 @@ export default function Home() {
                   Create, Optimize, and Share AI Prompt Templates
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Build powerful prompt templates, let AI optimize them, and share with others.
+                  Build powerful prompt templates, let AI optimize them, and
+                  share with others.
                 </p>
               </div>
               <div className="space-x-4">
-                <Link href="/dashboard">
-                  <Button size="lg">Get Started</Button>
-                </Link>
-                <Link href="/templates/explore">
-                  <Button variant="outline" size="lg">
-                    Explore Templates
-                  </Button>
-                </Link>
+                {user ? (
+                  <Link href="/dashboard">
+                    <Button size="lg">Go to Dashboard</Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/login">
+                      <Button size="lg">Get Started</Button>
+                    </Link>
+                    <Link href="/templates/explore">
+                      <Button variant="outline" size="lg">
+                        Explore Templates
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -53,15 +80,20 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-3 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">Create Custom Templates</h2>
+                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">
+                    Create Custom Templates
+                  </h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                    Design your own prompt templates with variables and instructions.
+                    Design your own prompt templates with variables and
+                    instructions.
                   </p>
                 </div>
               </div>
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">AI-Powered Optimization</h2>
+                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">
+                    AI-Powered Optimization
+                  </h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                     Let the AI optimize your templates for better results.
                   </p>
@@ -69,7 +101,9 @@ export default function Home() {
               </div>
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">Share with Others</h2>
+                  <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl">
+                    Share with Others
+                  </h2>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                     Share your templates with the community or specific users.
                   </p>
@@ -87,6 +121,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
-
